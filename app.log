@@ -1,0 +1,84 @@
+<class 'dict'>
+<class 'dict'>
+<class 'werkzeug.local.LocalProxy'>
+<class 'werkzeug.local.LocalProxy'>
+{'id': 202, 'username': 'sadmin', 'name': 'sadmin', 'avatar': 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', 'exp': 1721532784, 'role': {'id': 8, 'name': '管理员'}}
+{'id': 202, 'username': 'sadmin', 'name': 'sadmin', 'avatar': 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', 'exp': 1721532784, 'role': {'id': 8, 'name': '管理员'}}
+'dict' object has no attribute 'id'
+'dict' object has no attribute 'id'
+App has started
+'dict' object has no attribute 'id'
+'dict' object has no attribute 'id'
+App has started
+('无权限访问', 400)
+('无权限访问', 400)
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+1
+App has started
+1
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+['/venues/get_judge', '/venues/change_add_judge', '/venues/get_judges', '/venues/get_judge_types', '/venues/get_sport', '/venues/get_sports', '/venues/save_score', '/venues/save_score_sd']
+App has started
+/venues/get_judge
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
+App has started
