@@ -5,6 +5,7 @@ import time
 
 from flask import Blueprint, request, g, current_app
 from marshmallow import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 from common.redis_client import get_redis_client
 from common.schemas import UserSchema, format_validation_error
@@ -120,7 +121,7 @@ def get_user():
         return fail("不存在此用户")
     role = []
     if len(user.roles) > 0:
-        role = [user.roles[0].id]
+        role = user.roles[0].id
     user = UserSerializer().dump(user)
     user['roles'] = role
     return success(user)
@@ -153,23 +154,28 @@ def change_user():
         user.qq = user_data['qq']
     if 'forbidden' in user_data:
         user.forbidden = user_data['forbidden']
+    try:
+        # 更新用户角色
+        if 'roles' in user_data:
 
-    # 更新用户角色
-    if 'roles' in user_data:
-        user.roles = []
-        for role_id in user_data['roles']:
-            role = Role.query.filter_by(id=role_id).first()
+            user.roles.clear()
+            role = Role.query.filter_by(id=user_data['roles']).first()
             if role:
                 user.roles.append(role)
+        else:
+            user.roles.clear()
 
-    try:
         db.session.commit()
         return success("用户信息更新成功")
     except Exception as e:
         db.session.rollback()
+        print(type(e))
+        if isinstance(e,IntegrityError):
+            return fail("用户名重复")
         return fail(f"用户信息更新失败: {str(e)}")
 
-@UserBp.route('/edit_user',methods=["POST"])
+
+@UserBp.route('/edit_user', methods=["POST"])
 def edit_user():
     user_id = g.user_info['id']
     data = g.data
@@ -185,6 +191,8 @@ def edit_user():
     user.password = data['password']
     db.session.commit()
     return success("修改成功")
+
+
 @UserBp.route('/add_user', methods=['POST'])
 def add_user():
     user_data = g.data
@@ -225,7 +233,24 @@ def change_avatar():
         user = User.query.filter_by(id=user_id).first()
         user.avatar = url
         db.session.commit()
-        return success({'msg': "上传成功", 'data':url })
+        return success({'msg': "上传成功", 'data': url})
+    finally:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+#  单纯上传文件接口
+@UserBp.route('/upload', methods=['POST'])
+def upload_file():
+    user_id = g.user_info['id']
+    file = request.files.get('file')
+    if not file:
+        return fail("没有提供文件")
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        file_path = temp_file.name
+        file.save(file_path)
+    try:
+        url = upload_qiniu_yun(file_path, user_id)
+        return success(url)
     finally:
         if os.path.exists(file_path):
             os.remove(file_path)
